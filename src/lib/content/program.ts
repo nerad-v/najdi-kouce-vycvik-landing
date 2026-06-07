@@ -1,0 +1,61 @@
+export const program = {
+  eyebrow: 'Program',
+  headline: 'Tři měsíce, tři bloky, jedna zkouška.',
+  sub: '120 hodin výuky — 90 prezenčně v Brně, 30 v podobě samostudia mezi bloky. Každý blok je třídenní (pátek–neděle), abyste nemuseli brát dovolenou ve všedních dnech.',
+  blocks: [
+    {
+      number: '01',
+      title: 'Základy a struktura',
+      dates: '18.–20. září 2026',
+      summary: 'Postavíme základy. Po prvním bloku víte, co je koučink, jak se liší od terapie a mentoringu, a vedete vlastní strukturované sezení.',
+      topics: [
+        'Teorie a historie koučinku — co opravdu znamená',
+        'Raport, empatie, naslouchání bez hodnocení',
+        'GROW model a SMART cíle v praxi',
+        'Základní koučovací techniky — silné otázky, parafráze, ticho',
+        'Hranice rolí: kouč, mentor, psycholog, terapeut',
+        'První drily se zpětnou vazbou od lektorů',
+      ],
+    },
+    {
+      number: '02',
+      title: 'Pokročilé techniky a NLP',
+      dates: '16.–18. října 2026',
+      summary: 'Přidáme hloubku. Pracujete s emocemi, limitujícími přesvědčeními, strachem a tělem. NLP není doplněk — je integrální součást našeho výcviku.',
+      topics: [
+        'Práce s potenciálem a vnitřním kritikem',
+        'NLP: práce se strachem, obavami, blokem',
+        'Modelování emocí a psychosomatika',
+        'Krizová intervence v koučinku — co dělat, když klient pláče',
+        'Typologie osobnosti — komunikace pod tlakem',
+        'Trénink + zpětná vazba — víc drilů, vyšší laťka',
+      ],
+    },
+    {
+      number: '03',
+      title: 'Praxe, brand a první klient',
+      dates: '20.–22. listopadu 2026',
+      summary: 'Připravíme vás na rozjezd. Nejen koučovací techniky, ale celý systém — jak si nastavit cenu, jak komunikovat na sítích, jak vést úvodní hovor.',
+      topics: [
+        'Stres a vyhoření — koučink ve vypjatých situacích',
+        'Týmový koučink a koučování ve firmě',
+        'Time a energy management pro kouče',
+        'Osobní brand: web, sítě, prodej, cenotvorba',
+        'Komunita Najdi kouče — záchranná síť pro první rok',
+        'Příprava na zkoušku',
+      ],
+    },
+    {
+      number: 'Z',
+      title: 'Závěrečná zkouška',
+      dates: 'Součást 3. bloku',
+      summary: 'Zkouška, kterou nelze obejít. Písemná teorie + 30–45 minut reálného koučovacího rozhovoru s neznámým klientem před komisí.',
+      topics: [
+        'Písemný test — 85 % úspěšnost (teorie, metody, etika)',
+        'Praktická zkouška — 30–45 minut koučovacího sezení',
+        'Hodnocení od dvou lektorů: způsobilý / nezpůsobilý',
+        'Po úspěšné zkoušce: certifikát MŠMT 25703/2023-3',
+      ],
+    },
+  ],
+} as const

@@ -1,0 +1,64 @@
+{
+  "name": "cyda-web-project",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": "20.x"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "anti-ai-grep": "bash ../../../references/anti-ai-grep.sh src/lib/content/"
+  },
+  "dependencies": {
+    "next": "16.2.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hook-form": "^7.54.2",
+    "zod": "^3.24.1",
+    "@hookform/resolvers": "^3.9.1",
+    "resend": "^4.0.0",
+    "framer-motion": "^11.15.0",
+    "lucide-react": "^0.469.0",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.6.0",
+    "lenis": "^1.1.18"
+  },
+  "devDependencies": {
+    "typescript": "^5",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "tailwindcss": "^3.4.17",
+    "postcss": "^8",
+    "autoprefixer": "^10.0.1",
+    "eslint": "^8",
+    "eslint-config-next": "16.2.4"
+  },
+  "_wowOptional": {
+    "_comment": "Tyto deps NEINSTALUJ default. Přidej per-project podle WOW Patterns vybraných v design-spec.md. Reference: references/wow-catalog.md",
+    "premium-scroll": {
+      "gsap": "^3.x",
+      "@gsap/react": "^2.x",
+      "lenis": "^1.x"
+    },
+    "3d-spline": {
+      "@splinetool/react-spline": "^4.x"
+    },
+    "3d-r3f": {
+      "@react-three/fiber": "^8.x",
+      "@react-three/drei": "^9.x",
+      "three": "^0.160.x",
+      "@types/three": "^0.160.x"
+    },
+    "comparison-slider": {
+      "react-compare-slider": "^3.x"
+    },
+    "easter-egg": {
+      "canvas-confetti": "^1.x",
+      "@types/canvas-confetti": "^1.x"
+    }
+  }
+}
