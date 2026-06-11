@@ -1,23 +1,14 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+  // Static export — deploy jako statické HTML do najdikouce/vycvik/
+  output: 'export',
   images: {
-    // Přidat domény externích obrázků pokud potřeba:
-    // remotePatterns: [{ hostname: 'example.com' }],
+    // Static export nepodporuje image optimization loader
+    unoptimized: true,
   },
-  // Přísné CSP hlavičky:
-  async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: [
-          { key: 'X-Frame-Options', value: 'DENY' },
-          { key: 'X-Content-Type-Options', value: 'nosniff' },
-          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-        ],
-      },
-    ]
-  },
+  // headers() záměrně odstraněno — output: 'export' je nepodporuje.
+  // CSP/security hlavičky řeší najdikouce/vercel.json na úrovni deploye.
 }
 
 export default nextConfig
