@@ -7,6 +7,9 @@ export const runtime = 'nodejs'
 const RECIPIENT = process.env.CONTACT_EMAIL ?? 'info@najdikouce.cz'
 const FROM = process.env.RESEND_FROM ?? 'Najdi kouče <noreply@najdikouce.cz>'
 const SHEETS_WEBHOOK = process.env.GOOGLE_SHEETS_WEBHOOK_URL
+const ECOMAIL_API_KEY = process.env.ECOMAIL_API_KEY
+const ECOMAIL_LIST_ID = process.env.ECOMAIL_LIST_ID ?? '17' // "Výcvik nakoupil"
+const ECOMAIL_TAGS = ['vycvik-rezervace']
 
 export async function POST(req: Request) {
   let body: unknown
@@ -32,19 +35,24 @@ export async function POST(req: Request) {
   const { name, email, phone } = parsed.data
   const apiKey = process.env.RESEND_API_KEY
 
-  // Fire-and-forget: log to Google Sheets in parallel.
-  // If Sheets fails, we still want the email to go through — never block user response on Sheets.
+  // Fire-and-forget capture channels (běží paralelně, nikdy neblokují odpověď uživateli):
+  //  1) Ecomail  — hlavní CRM: lead spadne do seznamu 17 "Výcvik nakoupil" + tag vycvik-rezervace
+  //  2) Sheets   — záložní log do Google Sheetu (Apps Script webhook)
+  const ecomailPromise = addToEcomail({ name, email, phone })
   const sheetsPromise = appendToSheet({ name, email, phone })
 
   if (!apiKey) {
-    // Resend not configured — fall back to Sheets-only.
-    // If Sheets succeeded, lead is safely captured → respond OK to user.
-    console.warn('[contact] RESEND_API_KEY missing — relying on Sheets only')
-    const sheetsResult = await sheetsPromise.catch((e) => e)
-    if (sheetsResult instanceof Error || SHEETS_WEBHOOK == null) {
+    // Resend nenastaven — spolehni se na Ecomail + Sheets.
+    // Pokud aspoň jeden capture kanál uspěl, lead je bezpečně zachycen → vrať OK.
+    console.warn('[contact] RESEND_API_KEY missing — relying on Ecomail/Sheets only')
+    const [ec, sh] = await Promise.allSettled([ecomailPromise, sheetsPromise])
+    const captured =
+      (ec.status === 'fulfilled' && ec.value === true) ||
+      (sh.status === 'fulfilled' && SHEETS_WEBHOOK != null)
+    if (!captured) {
       return NextResponse.json({ error: 'Service not configured.' }, { status: 503 })
     }
-    return NextResponse.json({ ok: true, channel: 'sheets-only' })
+    return NextResponse.json({ ok: true, channel: 'no-email' })
   }
 
   const resend = new Resend(apiKey)
@@ -61,7 +69,7 @@ export async function POST(req: Request) {
   `
 
   try {
-    // Run e-mail + Sheets in parallel; e-mail is the gating one
+    // E-mail + Ecomail + Sheets paralelně; e-mail je gating (na něm závisí odpověď)
     const [emailResult] = await Promise.allSettled([
       resend.emails.send({
         from: FROM,
@@ -70,6 +78,7 @@ export async function POST(req: Request) {
         subject: `Nová rezervace výcviku — ${name}`,
         html,
       }),
+      ecomailPromise,
       sheetsPromise,
     ])
 
@@ -84,8 +93,45 @@ export async function POST(req: Request) {
   }
 }
 
+// Přidá lead do Ecomailu (seznam 17 "Výcvik nakoupil") + tag vycvik-rezervace.
+// Vrací true při úspěchu, jinak false. Nikdy nehází — capture nesmí shodit odpověď.
+async function addToEcomail(data: { name: string; email: string; phone: string }): Promise<boolean> {
+  if (!ECOMAIL_API_KEY) {
+    console.warn('[contact] ECOMAIL_API_KEY missing — skipping Ecomail')
+    return false
+  }
+  const [first, ...rest] = data.name.trim().split(/\s+/)
+  try {
+    const res = await fetch(`https://api2.ecomailapp.cz/lists/${ECOMAIL_LIST_ID}/subscribe`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', key: ECOMAIL_API_KEY },
+      body: JSON.stringify({
+        subscriber_data: {
+          email: data.email,
+          name: first ?? '',
+          surname: rest.join(' '),
+          phone: data.phone,
+          tags: ECOMAIL_TAGS,
+        },
+        update_existing: true,
+        resubscribe: true,
+      }),
+      // Ecomail bývá rychlý; krátký timeout ať neblokujeme Vercel funkci
+      signal: AbortSignal.timeout(8000),
+    })
+    if (!res.ok) {
+      console.error('[contact] Ecomail returned', res.status, await res.text().catch(() => ''))
+      return false
+    }
+    return true
+  } catch (err) {
+    console.error('[contact] Ecomail error:', err)
+    return false
+  }
+}
+
 async function appendToSheet(data: { name: string; email: string; phone: string }) {
-  if (!SHEETS_WEBHOOK) return // Sheets is optional — skip silently if not configured
+  if (!SHEETS_WEBHOOK) return // Sheets je volitelný — přeskoč tiše, když není nastaven
   try {
     const res = await fetch(SHEETS_WEBHOOK, {
       method: 'POST',
@@ -97,7 +143,7 @@ async function appendToSheet(data: { name: string; email: string; phone: string 
         phone: data.phone,
         source: 'vycvik.najdikouce.cz',
       }),
-      // Apps Script can be slow; short-circuit at 8 s so we don't hang Vercel function
+      // Apps Script může být pomalý; short-circuit na 8 s, ať nevisíme
       signal: AbortSignal.timeout(8000),
     })
     if (!res.ok) {
