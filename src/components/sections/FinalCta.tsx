@@ -14,6 +14,11 @@ import { Reveal } from '@/components/motion/Reveal'
 
 const iconMap = { phone: Phone, shield: ShieldCheck, lock: Lock } as const
 
+// Backend formuláře = Google Apps Script webová aplikace (zapisuje do Sheetu + Ecomailu + posílá notifikaci).
+// Funguje pro statický i serverový deploy. URL získáš nasazením apps-script-vycvik-landing.js
+// (Tabulka → Rozšíření → Apps Script → Nasadit → Webová aplikace → zkopírovat URL).
+const FORM_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbyBOhjKNj3kup9WgmCeiTq2fn8Gkv3v1vL26SFm1IZSB3QeeQ7k3ERmf7LW6dnrj_U/exec'
+
 export function FinalCta() {
   const router = useRouter()
   const [serverError, setServerError] = useState<string | null>(null)
@@ -29,12 +34,14 @@ export function FinalCta() {
   async function onSubmit(values: ReservationInput) {
     setServerError(null)
     try {
-      const res = await fetch('/api/contact', {
+      // Apps Script Web App: POST jako text/plain + no-cors → žádný CORS preflight.
+      // Odpověď je opaque (nečte se); pokud fetch nehodí, POST dorazil → optimisticky úspěch.
+      await fetch(FORM_WEBHOOK_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(values),
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ ...values, source: 'vycvik.najdikouce.cz' }),
       })
-      if (!res.ok) throw new Error('server')
       router.push('/dekujeme')
     } catch {
       setServerError(finalCta.errors.server)
