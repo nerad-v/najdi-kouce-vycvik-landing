@@ -39,14 +39,12 @@ export default function GdprPage() {
               <br />
               IČO: 11997249
               <br />
-              Sídlo: Brno
+              Sídlo: třída Kpt. Jaroše 1922/3, Brno
               <br />
               E-mail:{' '}
               <a href="mailto:info@najdikouce.cz" className="text-brand underline">
                 info@najdikouce.cz
               </a>
-              <br />
-              Telefon: +420 731 123 491
             </p>
           </Section>
 
@@ -111,7 +109,7 @@ export default function GdprPage() {
           <Section title="5. Doba uchování">
             <ul className="list-disc space-y-2 pl-5">
               <li>Kontaktní údaje z formuláře: po dobu vyřízení poptávky a dále po dobu nezbytnou k ochraně oprávněných zájmů, nejdéle dle zákonných lhůt.</li>
-              <li>Marketingové údaje: do odvolání souhlasu / vznesení námitky.</li>
+              <li>Marketingové údaje: nejdéle 10 let nebo do odvolání souhlasu / vznesení námitky.</li>
               <li>Analytická data: po dobu nastavenou v nástroji měření (zpravidla maximálně 13 měsíců).</li>
             </ul>
           </Section>
