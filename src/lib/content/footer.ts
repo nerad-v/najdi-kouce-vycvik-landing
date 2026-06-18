@@ -32,9 +32,9 @@ export const footer = {
     copyright: '© 2026 Najdi kouče s.r.o.',
     accreditation: 'Akreditace MŠMT 25703/2023-3',
     legal: [
-      // Odkaz na existující firemní GDPR stránku (single source of truth, ne 404).
+      // Lokální /gdpr stránka (pokrývá formulář + měření Clarity, odkazuje na firemní zásady).
       // Obchodní podmínky odebrány — na landingu se nic přímo neprodává (jen rezervace/lead).
-      { label: 'Zásady ochrany osobních údajů', href: 'https://najdikouce.cz/zasady-zpracovani-osobnich-udaju' },
+      { label: 'Zásady ochrany osobních údajů', href: '/gdpr' },
     ],
   },
 } as const
