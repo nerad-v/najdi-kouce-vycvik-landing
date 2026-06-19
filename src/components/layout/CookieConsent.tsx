@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 /**
  * Cookie lišta (dole v rohu, ne přes celé okno) + řízení Microsoft Clarity.
  * Režim OPT-OUT: měříme ve výchozím stavu (i bez volby). Měření se zastaví
- * jen při explicitním "Rozumím a nesouhlasím". Volba se pamatuje v localStorage.
+ * jen při explicitním "Nesouhlasím". Volba se pamatuje v localStorage.
  */
 
 const STORAGE_KEY = 'nk-cookie-consent' // 'granted' | 'denied'
@@ -92,14 +92,14 @@ export function CookieConsent() {
           onClick={() => decide('granted')}
           className="inline-flex flex-1 items-center justify-center rounded-lg bg-brand px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-dark"
         >
-          Souhlasím
+          Rozumím
         </button>
         <button
           type="button"
           onClick={() => decide('denied')}
           className="inline-flex flex-1 items-center justify-center rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-semibold text-gray-600 transition-colors hover:bg-gray-50"
         >
-          Rozumím a nesouhlasím
+          Nesouhlasím
         </button>
       </div>
     </div>

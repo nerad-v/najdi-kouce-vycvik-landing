@@ -97,7 +97,7 @@ export default function GdprPage() {
                 Apps Script).
               </li>
               <li>
-                <strong>Poskytovatel hostingu webu</strong> — technický provoz stránky.
+                <strong>Vercel Inc.</strong> — hosting a technický provoz webu.
               </li>
             </ul>
             <p className="mt-3">
@@ -122,7 +122,7 @@ export default function GdprPage() {
             </p>
             <p className="mt-3">
               Při první návštěvě se vám zobrazí lišta, kde můžete měření{' '}
-              <strong>odmítnout tlačítkem „Rozumím a nesouhlasím“</strong>. Volbu si pamatujeme ve
+              <strong>odmítnout tlačítkem „Nesouhlasím“</strong>. Volbu si pamatujeme ve
               vašem prohlížeči; změnit ji můžete vymazáním dat webu v prohlížeči. Nezbytné technické
               cookies pro fungování stránky se nastavují vždy.
             </p>
